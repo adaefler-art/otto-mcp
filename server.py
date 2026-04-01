@@ -9,6 +9,7 @@ from typing import TypedDict
 import uvicorn
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
+from mcp.server.transport_security import TransportSecuritySettings
 from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
@@ -46,6 +47,11 @@ mcp = FastMCP(
     json_response=True,
     lifespan=app_lifespan,
     streamable_http_path="/",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=["otto-mcp.fly.dev", "127.0.0.1:*", "localhost:*", "[::1]:*"],
+        allowed_origins=["https://claude.ai", "http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*"],
+    ),
 )
 
 
@@ -213,7 +219,7 @@ async def healthcheck(_request) -> JSONResponse:
             "transport": "streamable-http",
             "port": int(os.getenv("PORT", "8080")),
             "feed_configured": bool(os.getenv("AWIN_FEED_URL")),
-            "mcp_endpoint": "/mcp",
+            "mcp_endpoint": "/mcp/",
         }
     )
 

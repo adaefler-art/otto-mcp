@@ -50,12 +50,14 @@ The health endpoint will be available at `http://localhost:8080/` and the MCP en
 For Claude as a remote connector, use the MCP endpoint URL, not the health URL:
 
 ```text
-https://otto-mcp.fly.dev/mcp
+https://otto-mcp.fly.dev/mcp/
 ```
 
 If the connector runs in a browser-based environment, the server must expose the `Mcp-Session-Id` response header via CORS. This repository is configured for that.
 
 The server is mounted so that the public MCP endpoint is exactly `/mcp`. Without this explicit path configuration, FastMCP would otherwise expose `/mcp/mcp` when mounted under `/mcp`.
+
+For remote clients, prefer the canonical URL with trailing slash, `https://otto-mcp.fly.dev/mcp/`, to avoid an extra `307 Temporary Redirect` during session initialization.
 
 ## Smoke Test Client
 
