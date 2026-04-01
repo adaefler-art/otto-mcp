@@ -45,6 +45,7 @@ mcp = FastMCP(
     instructions="Search Otto-style product data, inspect product details, and manage a session-scoped shopping cart.",
     json_response=True,
     lifespan=app_lifespan,
+    streamable_http_path="/",
 )
 
 
