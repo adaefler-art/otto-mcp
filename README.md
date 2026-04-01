@@ -47,6 +47,14 @@ python server.py
 
 The health endpoint will be available at `http://localhost:8080/` and the MCP endpoint at `http://localhost:8080/mcp`.
 
+For Claude as a remote connector, use the MCP endpoint URL, not the health URL:
+
+```text
+https://otto-mcp.fly.dev/mcp
+```
+
+If the connector runs in a browser-based environment, the server must expose the `Mcp-Session-Id` response header via CORS. This repository is configured for that.
+
 ## Smoke Test Client
 
 Run the local smoke test client against a running server:

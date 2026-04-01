@@ -10,6 +10,7 @@ import uvicorn
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from starlette.applications import Starlette
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
 
@@ -216,12 +217,20 @@ async def healthcheck(_request) -> JSONResponse:
     )
 
 
-app = Starlette(
+starlette_app = Starlette(
     routes=[
         Route("/", healthcheck),
         Mount("/mcp", app=mcp.streamable_http_app()),
     ],
     lifespan=lifespan,
+)
+
+app = CORSMiddleware(
+    starlette_app,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    expose_headers=["Mcp-Session-Id"],
 )
 
 
