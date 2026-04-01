@@ -47,6 +47,31 @@ python server.py
 
 The health endpoint will be available at `http://localhost:8080/` and the MCP endpoint at `http://localhost:8080/mcp`.
 
+## Smoke Test Client
+
+Run the local smoke test client against a running server:
+
+```bash
+python smoke_test_client.py
+```
+
+Optional flags:
+
+```bash
+python smoke_test_client.py --url http://localhost:8080/mcp --query lamp --limit 5
+```
+
+The smoke test does the following in one session:
+
+- lists available tools
+- calls `search_products`
+- calls `get_product_details` for the first result, if present
+- calls `add_to_cart`
+- calls `view_cart`
+- calls `remove_from_cart`
+
+This is intended as a quick local verification pass for the deployed or local streamable HTTP endpoint.
+
 ## MCP Tool Behavior
 
 ### `search_products`
@@ -104,6 +129,8 @@ fly launch --copy-config --no-deploy
 fly secrets set AWIN_FEED_URL="https://example.com/feed.csv"
 fly deploy
 ```
+
+If you want to deploy immediately without a real feed URL, the app still works with mock data and can be deployed without setting `AWIN_FEED_URL`. Once you have the real feed URL, set it with `fly secrets set` and redeploy.
 
 ## Publish to GitHub
 
