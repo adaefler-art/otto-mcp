@@ -57,7 +57,9 @@ If the connector runs in a browser-based environment, the server must expose the
 
 The server is mounted so that the public MCP endpoint is exactly `/mcp`. Without this explicit path configuration, FastMCP would otherwise expose `/mcp/mcp` when mounted under `/mcp`.
 
-For remote clients, prefer the canonical URL with trailing slash, `https://otto-mcp.fly.dev/mcp/`, to avoid an extra `307 Temporary Redirect` during session initialization.
+For remote clients, prefer the canonical URL with trailing slash, `https://otto-mcp.fly.dev/mcp/`.
+
+The server also accepts `https://otto-mcp.fly.dev/mcp` directly, so clients that omit the trailing slash do not depend on redirect handling.
 
 ## Smoke Test Client
 

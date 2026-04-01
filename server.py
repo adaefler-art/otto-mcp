@@ -11,6 +11,7 @@ from mcp.server.fastmcp import Context, FastMCP
 from mcp.server.session import ServerSession
 from mcp.server.transport_security import TransportSecuritySettings
 from starlette.applications import Starlette
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Mount, Route
@@ -53,6 +54,12 @@ mcp = FastMCP(
         allowed_origins=["https://claude.ai", "http://127.0.0.1:*", "http://localhost:*", "http://[::1]:*"],
     ),
 )
+
+class McpPathNormalizationMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.scope.get("path") == "/mcp":
+            request.scope["path"] = "/mcp/"
+        return await call_next(request)
 
 
 def _session_key(ctx: Context[ServerSession, AppContext]) -> str:
@@ -231,6 +238,8 @@ starlette_app = Starlette(
     ],
     lifespan=lifespan,
 )
+
+starlette_app.add_middleware(McpPathNormalizationMiddleware)
 
 app = CORSMiddleware(
     starlette_app,
